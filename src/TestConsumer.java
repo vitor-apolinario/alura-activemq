@@ -1,5 +1,4 @@
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
+import javax.jms.*;
 import javax.naming.InitialContext;
 import java.util.Scanner;
 
@@ -14,6 +13,15 @@ public class TestConsumer {
         Connection conexao = cf.createConnection();
 
         conexao.start();
+
+        Session session = conexao.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        Destination fila = (Destination) context.lookup("financeiro");
+        MessageConsumer consumer = session.createConsumer(fila);
+
+        Message message = consumer.receive();
+        System.out.println("Recebendo msg: " + message);
+
+        session.close();
 
         new Scanner(System.in).nextLine();
 
