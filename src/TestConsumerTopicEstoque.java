@@ -7,7 +7,7 @@ public class TestConsumerTopicEstoque {
     public static void main(String[] args) throws Exception {
         InitialContext ctx = new InitialContext();
         TopicConnectionFactory cf = (TopicConnectionFactory) ctx.lookup("ConnectionFactory");
-        TopicConnection conexao = cf.createTopicConnection();
+        TopicConnection conexao = cf.createTopicConnection("user", "senha");
         conexao.setClientID("estoque");
         conexao.start();
 
