@@ -2,23 +2,25 @@ import javax.jms.*;
 import javax.naming.InitialContext;
 import java.util.Scanner;
 
-public class TestConsumer {
+public class TestConsumerTopicEstoque {
 
     public static void main(String[] args) throws Exception {
         InitialContext ctx = new InitialContext();
-        QueueConnectionFactory cf = (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-        QueueConnection conexao = cf.createQueueConnection();
+        TopicConnectionFactory cf = (TopicConnectionFactory) ctx.lookup("ConnectionFactory");
+        TopicConnection conexao = cf.createTopicConnection();
+        conexao.setClientID("estoque");
         conexao.start();
 
-        QueueSession sessao = conexao.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue fila = (Queue) ctx.lookup("financeiro");
-        QueueReceiver receiver = (QueueReceiver) sessao.createReceiver(fila );
+        TopicSession sessao = conexao.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+        Topic topico = (Topic) ctx.lookup("loja");
 
-        // Message message = receiver.receive();
+        MessageConsumer consumer = (MessageConsumer) sessao.createDurableSubscriber(topico, "assinatura", "ebook=false", false);
 
-        receiver.setMessageListener(new MessageListener(){
-            @Override
+        consumer.setMessageListener(new MessageListener(){
+
+           @Override
             public void onMessage(Message message){
+
                 TextMessage textMessage = (TextMessage) message;
                 try {
                     System.out.println(textMessage.getText());
