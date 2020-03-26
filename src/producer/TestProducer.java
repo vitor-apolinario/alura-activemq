@@ -18,11 +18,10 @@ public class TestProducer {
         MessageProducer producer = (MessageProducer) sessao.createProducer(fila);
 
 
-        for (int i = 0; i < 1000 ; i++) {
-            Message message = sessao.createTextMessage(i + ": vitor lindo");
-
+//        for (int i = 0; i < 1000 ; i++) {
+            Message message = sessao.createTextMessage(": vitor mandou msg dnv");
             producer.send(message);
-        }
+//        }
 
         // new Scanner(System.in).nextLine();
 

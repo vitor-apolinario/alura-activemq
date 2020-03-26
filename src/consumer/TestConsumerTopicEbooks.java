@@ -1,5 +1,7 @@
 package consumer;
 
+import br.com.caelum.modelo.Pedido;
+
 import javax.jms.*;
 import javax.naming.InitialContext;
 import java.util.Scanner;
@@ -7,6 +9,8 @@ import java.util.Scanner;
 public class TestConsumerTopicEbooks {
 
     public static void main(String[] args) throws Exception {
+        System.setProperty("org.apache.activemq.SERIALIZABLE_PACKAGES","*");
+
         InitialContext ctx = new InitialContext();
         TopicConnectionFactory cf = (TopicConnectionFactory) ctx.lookup("ConnectionFactory");
         TopicConnection conexao = cf.createTopicConnection("user", "senha");
@@ -16,16 +20,17 @@ public class TestConsumerTopicEbooks {
         TopicSession sessao = conexao.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
         Topic topico = (Topic) ctx.lookup("loja");
 
-        MessageConsumer consumer = (MessageConsumer) sessao.createDurableSubscriber(topico, "assinatura", "ebook=true", false);
+        MessageConsumer consumer = (MessageConsumer) sessao.createDurableSubscriber(topico, "assinatura", "ok=true", false);
 
         consumer.setMessageListener(new MessageListener(){
 
            @Override
             public void onMessage(Message message){
 
-                TextMessage textMessage = (TextMessage) message;
+                ObjectMessage objectMessage = (ObjectMessage) message;
                 try {
-                    System.out.println(textMessage.getText());
+                    Pedido pedido = (Pedido) objectMessage.getObject();
+                    System.out.println(pedido.getItens());
                 } catch (JMSException e) {
                     e.printStackTrace();
                 }

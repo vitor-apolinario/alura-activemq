@@ -4,16 +4,16 @@ import javax.jms.*;
 import javax.naming.InitialContext;
 import java.util.Scanner;
 
-public class TestConsumer {
+public class TestConsumerDLQ {
 
     public static void main(String[] args) throws Exception {
         InitialContext ctx = new InitialContext();
         QueueConnectionFactory cf = (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
-        QueueConnection conexao = cf.createQueueConnection();
+        QueueConnection conexao = cf.createQueueConnection("admin", "admin");
         conexao.start();
 
-        QueueSession sessao = conexao.createQueueSession(false, Session.CLIENT_ACKNOWLEDGE);
-        Queue fila = (Queue) ctx.lookup("financeiro");
+        QueueSession sessao = conexao.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+        Queue fila = (Queue) ctx.lookup("dlq");
         QueueReceiver receiver = (QueueReceiver) sessao.createReceiver(fila);
 
         // Message message = receiver.receive();
@@ -21,13 +21,7 @@ public class TestConsumer {
         receiver.setMessageListener(new MessageListener(){
             @Override
             public void onMessage(Message message){
-                TextMessage textMessage = (TextMessage) message;
-                try {
-                    System.out.println(textMessage.getText());
-                    message.acknowledge();
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
+                System.out.println(message);
             }
         });
 

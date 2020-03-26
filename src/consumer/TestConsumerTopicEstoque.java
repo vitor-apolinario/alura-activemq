@@ -16,7 +16,7 @@ public class TestConsumerTopicEstoque {
         TopicSession sessao = conexao.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
         Topic topico = (Topic) ctx.lookup("loja");
 
-        MessageConsumer consumer = (MessageConsumer) sessao.createDurableSubscriber(topico, "assinatura", "ebook=false", false);
+        MessageConsumer consumer = (MessageConsumer) sessao.createDurableSubscriber(topico, "assinatura", "ok=true", false);
 
         consumer.setMessageListener(new MessageListener(){
 
