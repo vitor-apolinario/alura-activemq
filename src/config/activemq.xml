@@ -25,3 +25,9 @@
         </map>
     </authorizationPlugin>
 </plugins>
+
+<!--para ativar prioridade de msgs-->
+<!--<destinationPolicy>-->
+<!--<policyMap>-->
+<!--    <policyEntries>-->
+<!--        <policyEntry queue=">" prioritizedMessages="true"/>-->
